@@ -1,0 +1,29 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>つぶやく / 画像を保存する</title>
+    <!-- The below script Makes IE understand the new html5
+            tags are there and applies our CSS to it -->
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/snow.css" type="text/css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+</head>
+<script>
+    $(function(){
+        var imgData = window.sessionStorage.getItem(['imgData'])
+        $('#image')[0].src = imgData;
+        $('#download')[0].href = imgData;
+        window.sessionStorage.removeItem(['imgData'])
+    });
+</script>
+<hr />
+<b>Image:</b>
+<div>
+  <img id="image">
+</div>
+<hr />
+<div class="right_float">
+    <a id="download" href="#" download="frosted_glass.png"><img src="/resource/images/download_button.png" alt="DL" border="0"></a>
+</div>
