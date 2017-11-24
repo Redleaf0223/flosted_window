@@ -9,31 +9,20 @@
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <link rel="stylesheet" href="../css/reset.css" type="text/css" />
-        <link rel="stylesheet" href="../css/snow.css" type="text/css" />
+        <link rel="stylesheet" href="../css/room.css" type="text/css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
     </head>
     <body>
-<body>
-<iframe src="advent_fork.html" id="window" width="1280" height="720" scrolling="no" frameborder="no"></iframe>
-<img id="image">
-<div id="item">
-        <input type="range" class="hole_size" value="60" min="1" max="256"><br/>
-        <div id="hole_size_num" class=".text_area">指の大きさ: 60px</div>
-    
-        <input type="range" class="frost_level" value="90" min="0" max="100"><br/>
-        <div id="frost_level_num" class=".text_area">曇りの強さ:90%</div>
-    
-        <input id="target" type="file" multiple>
-        <input id="clear" type="button" value="また明日">
-
-        <input type="button" id="undo_button" disabled="disabled" value="Undo" style="position:relative;z-index:10000;">
-        <input type="button" id="redo_button" disabled="disabled" value="Redo" style="position:relative;z-index:10000;">        
+        <iframe src="advent_fork.html" id="window" scrolling="no" frameborder="no"></iframe>
+    </body>
+    <div id="scroll">
+        <div class="scbt" id=""></div>
+        <div class="scbt" id="vertical"></div>
+        <div class="scbt" id="side"></div>
+        <div class="scbt triangle" id="top_triangle"></div>
+        <div class="scbt triangle" id="bottom_triangle"></div>
+        <div class="scbt triangle" id="left_triangle"></div>
+        <div class="scbt triangle" id="right_triangle"></div>
     </div>
-<!-- <form action="#" method="post" name="fdata" id="fdata"> 小倉入子
-    <input type="hidden" name="hidden_var" value="1">
-    <input type="button" name="btn" value="submit" onclick="window_open();">
-</form> -->
-</div>
-</body>
 </html>

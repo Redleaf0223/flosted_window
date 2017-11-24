@@ -35,9 +35,14 @@
             var count = 0;
             var undo_count = 0;
             var moveFlg = false;
-            var hole_size = 60;
+            if(window.innerWidth > 1279){
+                var hole_size = 60;
+            }else if(window.innerWidth > 720){
+                var hole_size = 45;
+            }else{
+                var hole_size = 30;
+            }
             var half_size = hole_size/2;
-
             $(function(){
                 $('#box_back').on(eventNames.start,function(e){
                     count += 1;
@@ -47,9 +52,9 @@
                         undo_count = 0;
                         $("#redo_button").prop('disabled',true);
                     }
-                    if(eventNames.move == 'touchstart'){
+                    if(eventNames.start == 'touchstart'){
                         x = e.originalEvent.touches[0].pageX;
-                        y = e.originalEvent.touches[0].pageY;
+                        y = e.originalEvent.touches[0].pageY;                 
                     }else{
                         x = e.pageX;
                         y = e.pageY;
@@ -65,6 +70,7 @@
                         if(eventNames.move == 'touchmove'){
                             var move_x = e.originalEvent.touches[0].pageX;
                             var move_y = e.originalEvent.touches[0].pageY;
+                            e.preventDefault();
                         }else{
                             var move_x = e.pageX;
                             var move_y = e.pageY;
@@ -109,6 +115,9 @@
                 $('#box_back').on(eventNames.end,function(e){
                     var x = e.pageX;
                     var y = e.pageY;
+                    
+                    // スクロール禁止 解除
+                    $(window).off('.noScroll');
                     moveFlg = false;
                 });
                 $('#box_back').mouseleave(function(e){
@@ -129,8 +138,11 @@
                     }
                     $('#mouse_are').css('width',hole_size);
                     $('#mouse_are').css('height',hole_size);
+                    $('#mouse_are').css('top',128 - half_size);
+                    $('#mouse_are').css('left',128 - half_size);
                     $('#mouse_are').css('border-radius',half_size);
-                    $('#hole_size_num').html('指の大きさ:'+ val +'px');
+
+                    $('#hole_size_num span').html('指の大きさ:'+ val +'px');
                 });
 
                 // 曇りの強さ変動
@@ -142,11 +154,13 @@
                         val = "  " + val;
                     }
                     $("#box_over").css('background-color','rgba(255,255,255,'+ val/100  +')');
-                    $('#frost_level_num').html('曇りの強さ:'+ val +'%');
+                    $('#frost_level_num span').html('曇りの強さ:'+ val +'%');
                 });
 
                 $("#clear").click(function(){
                     $(".hole").remove();
+                    $("#undo_button").prop('disabled',true);
+                    $("#redo_button").prop('disabled',true);
                 });
 
                 // 画像アップロードフォームのあれ
@@ -186,36 +200,74 @@
                     $("#undo_button").prop('disabled',false);
                     $("#redo_button").prop('disabled',true);
                 });
+
+                $(window).load(function () {
+                    $('#mouse_are').css('width',hole_size);
+                    $('#mouse_are').css('height',hole_size);
+                    $('#mouse_are').css('border-radius',half_size);
+                    $('#hole_size_num span').html('指の大きさ:'+ hole_size +'px');
+                });
+
+
+
             });
 
-                // DOM要素のハードコピーを取得 小倉入子
-                function screenshot(target) {
-                    var elm = $(target)[0];
-                    html2canvas(elm, {onrendered:function(canvas) {
-                        var imgData = canvas.toDataURL();
-                        $('#image')[0].src = imgData;
-                        // セッションの格納
-                        window.sessionStorage.setItem(['imgData'],[imgData]);
-                    }});
-                }
+                // // DOM要素のハードコピーを取得 小倉入子
+                // function screenshot(target) {
+                //     var elm = $(target)[0];
+                //     html2canvas(elm, {onrendered:function(canvas) {
+                //         var imgData = canvas.toDataURL();
+                //         $('#image')[0].src = imgData;
+                //         // セッションの格納
+                //         window.sessionStorage.setItem(['imgData'],[imgData]);
+                //     }});
+                // }
 
-                function window_open(){
-                    screenshot('#box');
-                }
+                // function window_open(){
+                //     screenshot('#box');
+                // }
          </script>
-<body>
 
 <div id="box">
     <div id="box_back">
             <div id="box_over">
             </div>            
     </div>        
+
+    <div id="item">
+            <div id="hole_size_num" class="text_area inline" style="display:inline-block;">
+                <input type="range" class="hole_size" value="60" min="1" max="256"><br/>
+                <span>指の大きさ: 60px</span>
+            </div>
+            <div class="inline" style="display:inline-block;">
+
+            </div>
+        
+            <div id="frost_level_num" class="text_area">
+                <input type="range" class="frost_level" value="90" min="0" max="100"><br/>
+                <span>曇りの強さ:90%</span>
+            </div>
+            <br/><br/>
+            <label>
+                背景画像の差し替えはこちらから
+                <input id="target" type="file" multiple>
+            </label>
+            <br/>
+            <input type="button" id="undo_button" disabled="disabled" value="一つ戻る" style="position:relative;z-index:10000;">
+            <input type="button" id="redo_button" disabled="disabled" value="一つ進む" style="position:relative;z-index:10000;">
+            <br/><br/>
+            <input id="clear" type="button" value="また明日（リセット）">
+            <br/>
+    </div>
 </div>
-<img id="image">
-<!-- <form action="#" method="post" name="fdata" id="fdata"> 小倉入子
-    <input type="hidden" name="hidden_var" value="1">
-    <input type="button" name="btn" value="submit" onclick="window_open();">
-</form> -->
+<div id="size_box">
+    <div id="mouse_are"></div>
+    <div id="size_box_v_l"></div>
+    <div id="size_box_v"></div>
+    <div id="size_box_v_r"></div>
+    <div id="size_box_s_t"></div>
+    <div id="size_box_s"></div>
+    <div id="size_box_s_b"></div>
 </div>
 </body>
 </html>
