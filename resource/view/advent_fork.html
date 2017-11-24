@@ -136,11 +136,11 @@
                     }else if(val < 10){
                         val = "  " + val;
                     }
-                    $('#mouse_are').css('width',hole_size);
-                    $('#mouse_are').css('height',hole_size);
-                    $('#mouse_are').css('top',128 - half_size);
-                    $('#mouse_are').css('left',128 - half_size);
-                    $('#mouse_are').css('border-radius',half_size);
+                    $('.mouse_are').css('width',hole_size);
+                    $('.mouse_are').css('height',hole_size);
+                    $('.mouse_are').css('top',128 - half_size);
+                    $('.mouse_are').css('left',128 - half_size);
+                    $('.mouse_are').css('border-radius',half_size);
 
                     $('#hole_size_num span').html('指の大きさ:'+ val +'px');
                 });
@@ -202,9 +202,9 @@
                 });
 
                 $(window).load(function () {
-                    $('#mouse_are').css('width',hole_size);
-                    $('#mouse_are').css('height',hole_size);
-                    $('#mouse_are').css('border-radius',half_size);
+                    $('.mouse_are').css('width',hole_size);
+                    $('.mouse_are').css('height',hole_size);
+                    $('.mouse_are').css('border-radius',half_size);
                     $('#hole_size_num span').html('指の大きさ:'+ hole_size +'px');
                 });
 
@@ -227,6 +227,16 @@
                 //     screenshot('#box');
                 // }
          </script>
+         <script text="JavaScript"><!--
+            function displayMouseXY(evt)
+            {
+                X = event.x + document.body.scrollLeft;
+                Y = event.y + document.body.scrollTop;
+                $("#mouse_").css('left',X - 30 + 'px');
+                $("#mouse_").css('top',Y -30 + 'px');
+            }
+            document.onmousemove = displayMouseXY;
+// --></script>
 
 <div id="box">
     <div id="box_back">
@@ -261,7 +271,7 @@
     </div>
 </div>
 <div id="size_box">
-    <div id="mouse_are"></div>
+    <div id="mouse_are"class="mouse_are"></div>
     <div id="size_box_v_l"></div>
     <div id="size_box_v"></div>
     <div id="size_box_v_r"></div>
@@ -270,4 +280,5 @@
     <div id="size_box_s_b"></div>
 </div>
 </body>
+<div id="mouse_"class="mouse_are"></div>
 </html>
