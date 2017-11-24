@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Flosted Window </title>
+        <!-- The below script Makes IE understand the new html5
+                tags are there and applies our CSS to it -->
+        <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="../css/reset.css" type="text/css" />
+        <link rel="stylesheet" href="../css/flosted_window.css" type="text/css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    </head>
+    <body>
+        <script type='text/javascript'>
+            // mouse / touchの振り分け
+            (function(window, document, undefined) {
+                var deviceEvents = {
+                    Touch     : typeof document.ontouchstart !== 'undefined',
+                    Pointer   : window.navigator.pointerEnabled,
+                    MSPointer : window.navigator.msPointerEnabled
+                };
+                var eventNames = {
+                    start     : deviceEvents.Pointer ? 'pointerdown' : deviceEvents.MSPointer ? 'MSPointerDown' : deviceEvents.Touch ? 'touchstart' : 'mousedown',
+                    move      : deviceEvents.Pointer ? 'pointermove' : deviceEvents.MSPointer ? 'MSPointerMove' : deviceEvents.Touch ? 'touchmove'  : 'mousemove',
+                    end       : deviceEvents.Pointer ? 'pointerup'   : deviceEvents.MSPointer ? 'MSPointerUp'   : deviceEvents.Touch ? 'touchend'   : 'mouseup',
+                    click     : 'click'
+                };
+                window.eventNames = eventNames;
+            })(this, this.document);
+            var x = 0;
+            var y = 0;
+            var count = 0;
+            var undo_count = 0;
+            var moveFlg = false;
+            var hole_size = 60;
+            var half_size = hole_size/2;
+
+            $(function(){
+                $('#box_back').on(eventNames.start,function(e){
+                    count += 1;
+                    // 再び書き始めたら歴史が変わるので、redoは禁止とする
+                    if(undo_count > 0){
+                        $("." + "undo").remove();
+                        undo_count = 0;
+                        $("#redo_button").prop('disabled',true);
+                    }
+                    if(eventNames.move == 'touchstart'){
+                        x = e.originalEvent.touches[0].pageX;
+                        y = e.originalEvent.touches[0].pageY;
+                    }else{
+                        x = e.pageX;
+                        y = e.pageY;
+                    }
+
+                    moveFlg = true;
+                    $('#box_back').append('<div class="hole '+ count +'" style="top:'+ (y - half_size) +'px;left:'+ (x - half_size) +'px;width:'+ hole_size +'px;height:'+ hole_size +'px;border-radius:'+ half_size +'px;"></div>');
+                    $("#undo_button").prop('disabled',false);
+                });
+
+                $('#box_back').on(eventNames.move,function(e){
+                    if(moveFlg){
+                        if(eventNames.move == 'touchmove'){
+                            var move_x = e.originalEvent.touches[0].pageX;
+                            var move_y = e.originalEvent.touches[0].pageY;
+                        }else{
+                            var move_x = e.pageX;
+                            var move_y = e.pageY;
+                        }
+                        var x_ = x - move_x;
+                        var y_ = y - move_y;
+                        var xflag = true;
+                        var yflag = true;
+                        var limit = 10;
+
+                        if($('.hole_size').val() < 10){
+                            limit = 40;
+                        }else if($('.hole_size').val() < 20){
+                            limit = 30;
+                        }if($('.hole_size').val() < 40){
+                            limit = 20;
+                        }
+                        if(x_ > -10 && x_ < 10){
+                            var x__ = 0;
+                            xflag = false;
+                        }else{
+                            var x__ = x_ / limit;
+                        }
+                        if(y_ > -10 && y_ < 10){
+                            var y__ = 0;
+                            yflag = false;
+                        }else{
+                            var y__ = y_ / limit;
+                        }
+                        if(xflag || yflag){
+                            for(var i = 1;i < limit; i += 1){
+                                $('#box_back').append('<div class="hole '+ count +'" style="top:'+ (move_y + (y__ * i) - half_size) +'px;left:'+ (move_x + (x__ * i) - half_size) +'px;width:'+ hole_size +'px;height:'+ hole_size +'px;border-radius:'+ half_size +'px;"></div>');
+                            }
+                        }else{
+                            $('#box_back').append('<div class="hole '+ count +'" style="top:'+ (move_y  - half_size) +'px;left:'+ (move_x - half_size) +'px;width:'+ hole_size +'px;height:'+ hole_size +'px;border-radius:'+ half_size +'px;"></div>');
+                        }
+                        x = move_x;
+                        y = move_y;
+                    }
+                });
+
+                $('#box_back').on(eventNames.end,function(e){
+                    var x = e.pageX;
+                    var y = e.pageY;
+                    moveFlg = false;
+                });
+                $('#box_back').mouseleave(function(e){
+                    var x = e.pageX;
+                    var y = e.pageY;
+                    moveFlg = false;
+                });
+                
+                // 指の大きさ変動
+                $('.hole_size').on('input',function(){
+                    var val = $(this).val();
+                    hole_size = val;
+                    half_size = hole_size/2;
+                    if(val > 10 && val < 100){
+                        val = " " + val;
+                    }else if(val < 10){
+                        val = "  " + val;
+                    }
+                    $('#mouse_are').css('width',hole_size);
+                    $('#mouse_are').css('height',hole_size);
+                    $('#mouse_are').css('border-radius',half_size);
+                    $('#hole_size_num').html('指の大きさ:'+ val +'px');
+                });
+
+                // 曇りの強さ変動
+                $('.frost_level').on('input',function(){
+                    var val = $(this).val();
+                    if(val > 10 && val < 100){
+                        val = " " + val;
+                    }else if(val < 10){
+                        val = "  " + val;
+                    }
+                    $("#box_over").css('background-color','rgba(255,255,255,'+ val/100  +')');
+                    $('#frost_level_num').html('曇りの強さ:'+ val +'%');
+                });
+
+                $("#clear").click(function(){
+                    $(".hole").remove();
+                });
+
+                // 画像アップロードフォームのあれ
+                document.getElementById("target").addEventListener("change", function() {
+                    // フォームで選択された全ファイルを取得
+                    var fileList = this.files;
+                    // 画像は一個だけ
+                    if(fileList.length > 1){
+                        alert("画像は一度に１枚だけ選択してください！")
+                        return false;
+                    }else{
+                        // Blob URLの作成
+                        var blobUrl = window.URL.createObjectURL(fileList[0]);
+                        if(fileList[0].name.match(/^.*[jpg|JPG|png|PNG]$/)){
+                            // HTMLに書き出し (src属性にblob URLを指定)
+                            $('#box_back').css('background-image','url("'+ blobUrl +'")')
+                        }else{
+                            alert("アップロード可能なファイルの形式は[ jpg | JPG | png | PNG ]のみです！");
+                            return false;
+                        }
+                    }
+                });
+
+                // 一つ戻るは一時的にdisplay noneで誤魔化す
+                $("#undo_button").click(function(){
+                    $("." + count).css('display','none');
+                    $("." + count).addClass('undo');
+                    undo_count = count
+                    $("#undo_button").prop('disabled',true);
+                    $("#redo_button").prop('disabled',false);
+                });
+
+                // 一つ進めるはdisplay noneを復活して誤魔化す
+                $("#redo_button").click(function(){
+                    $("." + count).css('display','');
+                    $(".undo").removeClass('undo');
+                    $("#undo_button").prop('disabled',false);
+                    $("#redo_button").prop('disabled',true);
+                });
+            });
+
+                // DOM要素のハードコピーを取得 小倉入子
+                function screenshot(target) {
+                    var elm = $(target)[0];
+                    html2canvas(elm, {onrendered:function(canvas) {
+                        var imgData = canvas.toDataURL();
+                        $('#image')[0].src = imgData;
+                        // セッションの格納
+                        window.sessionStorage.setItem(['imgData'],[imgData]);
+                    }});
+                }
+
+                function window_open(){
+                    screenshot('#box');
+                }
+         </script>
+<body>
+
+<div id="box">
+    <div id="box_back">
+            <div id="box_over">
+            </div>            
+    </div>        
+</div>
+<img id="image">
+<!-- <form action="#" method="post" name="fdata" id="fdata"> 小倉入子
+    <input type="hidden" name="hidden_var" value="1">
+    <input type="button" name="btn" value="submit" onclick="window_open();">
+</form> -->
+</div>
+</body>
+</html>
