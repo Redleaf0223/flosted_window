@@ -44,7 +44,8 @@
             }
             var half_size = hole_size/2;
             $(function(){
-                $('#box_back').on(eventNames.start,function(e){
+                $('#mouse_').on(eventNames.start,function(e){
+                    $('#mouse_').css('display','none')
                     count += 1;
                     // 再び書き始めたら歴史が変わるので、redoは禁止とする
                     if(undo_count > 0){
@@ -112,17 +113,18 @@
                     }
                 });
 
-                $('#box_back').on(eventNames.end,function(e){
+                $('#box').on(eventNames.end,function(e){
                     var x = e.pageX;
                     var y = e.pageY;
-                    
+                    $('#mouse_').css('display','block')
                     // スクロール禁止 解除
                     $(window).off('.noScroll');
                     moveFlg = false;
                 });
-                $('#box_back').mouseleave(function(e){
+                $('#box').mouseleave(function(e){
                     var x = e.pageX;
                     var y = e.pageY;
+                    $('#mouse_').css('display','block')
                     moveFlg = false;
                 });
                 
