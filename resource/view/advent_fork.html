@@ -138,10 +138,11 @@
                     }else if(val < 10){
                         val = "  " + val;
                     }
+                    $('#mouse_').css('display','none');
                     $('.mouse_are').css('width',hole_size);
                     $('.mouse_are').css('height',hole_size);
-                    $('.mouse_are').css('top',128 - half_size);
-                    $('.mouse_are').css('left',128 - half_size);
+                    $('#mouse_are').css('top',128 - half_size);
+                    $('#mouse_are').css('left',128 - half_size);
                     $('.mouse_are').css('border-radius',half_size);
 
                     $('#hole_size_num span').html('指の大きさ:'+ val +'px');
@@ -149,6 +150,7 @@
 
                 // 曇りの強さ変動
                 $('.frost_level').on('input',function(){
+                    $('#mouse_').css('display','none');
                     var val = $(this).val();
                     if(val > 10 && val < 100){
                         val = " " + val;
@@ -228,17 +230,18 @@
                 // function window_open(){
                 //     screenshot('#box');
                 // }
-         </script>
-         <script text="JavaScript"><!--
-            function displayMouseXY(evt)
+                function displayMouseXY(evt)
             {
                 X = event.x + document.body.scrollLeft;
                 Y = event.y + document.body.scrollTop;
-                $("#mouse_").css('left',X - 30 + 'px');
-                $("#mouse_").css('top',Y -30 + 'px');
+                $("#mouse_").css('left',X - half_size + 'px');
+                $("#mouse_").css('top',Y - half_size + 'px');
             }
             document.onmousemove = displayMouseXY;
-// --></script>
+         </script>
+         <script text="JavaScript">
+
+            </script>
 
 <div id="box">
     <div id="box_back">

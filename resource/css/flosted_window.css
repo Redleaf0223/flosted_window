@@ -46,6 +46,8 @@
 }
 
 #item{
+    z-index: 10000;
+    position: relative;    
     float: left;
 }
 
@@ -79,7 +81,7 @@
     box-sizing: border-box;
     border-radius: 30px;
     border: 1px solid;
-    z-index: 1;
+    z-index: 9999;
     background-color: rgba(140,140,140,0.6);
 }
 #size_box_v{
@@ -175,7 +177,6 @@
     }
 
     #item{
-        z-index: 2;
         float: left;
     }
 
