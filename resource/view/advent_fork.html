@@ -44,6 +44,7 @@
             }
             var half_size = hole_size/2;
             $(function(){
+                // クリックイベント
                 $('#mouse_').on(eventNames.start,function(e){
                     $('#mouse_').css('display','none')
                     count += 1;
@@ -65,7 +66,7 @@
                     $('#box_back').append('<div class="hole '+ count +'" style="top:'+ (y - half_size) +'px;left:'+ (x - half_size) +'px;width:'+ hole_size +'px;height:'+ hole_size +'px;border-radius:'+ half_size +'px;"></div>');
                     $("#undo_button").prop('disabled',false);
                 });
-
+                // スマホ用 タッチイベント
                 $('#box_back').on(eventNames.start,function(e){
                     $('#mouse_').css('display','none')
                     count += 1;
@@ -87,7 +88,7 @@
                     $('#box_back').append('<div class="hole '+ count +'" style="top:'+ (y - half_size) +'px;left:'+ (x - half_size) +'px;width:'+ hole_size +'px;height:'+ hole_size +'px;border-radius:'+ half_size +'px;"></div>');
                     $("#undo_button").prop('disabled',false);
                 });
-
+                // 移動
                 $('#box_back').on(eventNames.move,function(e){
                     if(moveFlg){
                         if(eventNames.move == 'touchmove'){
@@ -234,10 +235,8 @@
                     $('#hole_size_num span').html('指の大きさ:'+ hole_size +'px');
                 });
 
-
-
             });
-
+            // カーソル回りのあれ
             function finger_chase(evt){
                 X = event.x + document.body.scrollLeft;
                 Y = event.y + document.body.scrollTop;
@@ -245,6 +244,7 @@
                 $("#mouse_").css('top',Y - half_size + 'px');
             }
             document.onmousemove = finger_chase;
+            window.onload = finger_chase;
          </script>
          <script text="JavaScript">
 

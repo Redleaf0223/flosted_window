@@ -11,7 +11,7 @@
 }
 
 #box_back{
-    background-image:url('../images/snow/night-2966495_960_720.jpg');    
+    background-image:url('../images/snow/sample.jpg');    
     background-size: 1280px 720px;
     background-repeat: no-repeat;
     background-attachment : fixed;
@@ -84,6 +84,11 @@
     z-index: 9999;
     background-color: rgba(140,140,140,0.6);
 }
+
+#mouse_:hover{
+    cursor: pointer;
+}
+
 #size_box_v{
     position: absolute;
     left: 127.5px;
@@ -164,7 +169,6 @@
       font-weight: bold;
   }
 
-
 /* スマホほどじゃない小さ目デバイス */
 @media screen and ( max-device-width:1279px ){
     #box{
@@ -174,7 +178,6 @@
     }
 
     #box_back{
-        background-image:url('../images/snow/無題.png');    
         background-size: 800px 450px;
         background-repeat: no-repeat;
         background-attachment : fixed;
@@ -232,7 +235,6 @@
     }
 
     #box_back{
-        background-image:url('../images/snow/無題.png');    
         background-size: 480px 270px;
         background-repeat: no-repeat;
         background-attachment : fixed;
