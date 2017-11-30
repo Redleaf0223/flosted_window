@@ -66,6 +66,28 @@
                     $("#undo_button").prop('disabled',false);
                 });
 
+                $('#box_back').on(eventNames.start,function(e){
+                    $('#mouse_').css('display','none')
+                    count += 1;
+                    // 再び書き始めたら歴史が変わるので、redoは禁止とする
+                    if(undo_count > 0){
+                        $("." + "undo").remove();
+                        undo_count = 0;
+                        $("#redo_button").prop('disabled',true);
+                    }
+                    if(eventNames.start == 'touchstart'){
+                        x = e.originalEvent.touches[0].pageX;
+                        y = e.originalEvent.touches[0].pageY;                 
+                    }else{
+                        x = e.pageX;
+                        y = e.pageY;
+                    }
+
+                    moveFlg = true;
+                    $('#box_back').append('<div class="hole '+ count +'" style="top:'+ (y - half_size) +'px;left:'+ (x - half_size) +'px;width:'+ hole_size +'px;height:'+ hole_size +'px;border-radius:'+ half_size +'px;"></div>');
+                    $("#undo_button").prop('disabled',false);
+                });
+
                 $('#box_back').on(eventNames.move,function(e){
                     if(moveFlg){
                         if(eventNames.move == 'touchmove'){
@@ -216,28 +238,13 @@
 
             });
 
-                // // DOM要素のハードコピーを取得 小倉入子
-                // function screenshot(target) {
-                //     var elm = $(target)[0];
-                //     html2canvas(elm, {onrendered:function(canvas) {
-                //         var imgData = canvas.toDataURL();
-                //         $('#image')[0].src = imgData;
-                //         // セッションの格納
-                //         window.sessionStorage.setItem(['imgData'],[imgData]);
-                //     }});
-                // }
-
-                // function window_open(){
-                //     screenshot('#box');
-                // }
-                function displayMouseXY(evt)
-            {
+            function finger_chase(evt){
                 X = event.x + document.body.scrollLeft;
                 Y = event.y + document.body.scrollTop;
                 $("#mouse_").css('left',X - half_size + 'px');
                 $("#mouse_").css('top',Y - half_size + 'px');
             }
-            document.onmousemove = displayMouseXY;
+            document.onmousemove = finger_chase;
          </script>
          <script text="JavaScript">
 
@@ -252,26 +259,24 @@
     <div id="item">
             <div id="hole_size_num" class="text_area inline" style="display:inline-block;">
                 <input type="range" class="hole_size" value="60" min="1" max="256"><br/>
-                <span>指の大きさ: 60px</span>
+                <span class="level">指の大きさ: 60px</span>
             </div>
             <div class="inline" style="display:inline-block;">
 
             </div>
         
             <div id="frost_level_num" class="text_area">
-                <input type="range" class="frost_level" value="90" min="0" max="100"><br/>
-                <span>曇りの強さ:90%</span>
+                <input type="range" class="frost_level" value="50" min="0" max="100"><br/>
+                <span class="level">曇りの強さ:50%</span>
             </div>
-            <br/><br/>
-            <label>
-                背景画像の差し替えはこちらから
-                <input id="target" type="file" multiple>
-            </label>
             <br/>
-            <input type="button" id="undo_button" disabled="disabled" value="一つ戻る" style="position:relative;z-index:10000;">
-            <input type="button" id="redo_button" disabled="disabled" value="一つ進む" style="position:relative;z-index:10000;">
+            <input type="button" id="undo_button" class="common_button" disabled="disabled" value="一つ戻る" style="position:relative;z-index:10000;">
+            <input type="button" id="redo_button" class="common_button" disabled="disabled" value="一つ進む" style="position:relative;z-index:10000;">
             <br/><br/>
-            <input id="clear" type="button" value="また明日（リセット）">
+            <input id="clear" type="button" class="common_button" value="また明日（リセット）">
+            <label id="take_photo">
+                &nbsp;背景画像を差し替える<input id="target" type="file" multiple style="display:none;">
+            </label>
             <br/>
     </div>
 </div>
